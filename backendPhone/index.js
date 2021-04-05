@@ -56,7 +56,16 @@ app.get("/info", (request, response) => {
 
 app.post("/api/persons", (request, response) => {
   const generateID = Math.floor(Math.random() * 1000);
-  request.body = { id: generateID, name: "John", number: 123 };
+  request.body = { id: generateID, name: "Jake", number: 123 };
+  if (!("name" in request.body)) throw new Error("Enter a Name");
+  else if (!("number" in request.body)) {
+    throw new Error("Enter a Number");
+  } else {
+    const checkuniqueName = persons.some((person) => {
+      return person.name === request.body.name;
+    });
+    if (checkuniqueName) throw new Error("Name must be Unique");
+  }
   const person = request.body;
   response.json(person);
 });
