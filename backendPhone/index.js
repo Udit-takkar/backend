@@ -54,6 +54,13 @@ app.get("/info", (request, response) => {
   );
 });
 
+app.post("/api/persons", (request, response) => {
+  const generateID = Math.floor(Math.random() * 1000);
+  request.body = { id: generateID, name: "John", number: 123 };
+  const person = request.body;
+  response.json(person);
+});
+
 app.delete("/api/persons/del/:id", (request, response) => {
   const id = Number(request.params.id);
   persons = persons.filter((person) => person.id !== id);
