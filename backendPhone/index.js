@@ -1,7 +1,16 @@
 const express = require("express");
 const app = express();
+var fs = require("fs");
+var morgan = require("morgan");
+var path = require("path");
 
 app.use(express.json());
+// app.use(morgan("combined"));
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms :content "
+  )
+);
 let persons = [
   {
     id: 1,
@@ -57,6 +66,18 @@ app.get("/info", (request, response) => {
 app.post("/api/persons", (request, response) => {
   const generateID = Math.floor(Math.random() * 1000);
   request.body = { id: generateID, name: "Jake", number: 123 };
+
+  morgan.token("content", function (req, res) {
+    return JSON.stringify(request.body);
+  });
+
+  // app.use(
+  //   morgan(function (req, res, next) {
+  //     console.log(status);
+  //     next();
+  //   })
+  // );
+
   if (!("name" in request.body)) throw new Error("Enter a Name");
   else if (!("number" in request.body)) {
     throw new Error("Enter a Number");
